@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://img.freepik.com/free-vector/gradient-blur-pink-blue-abstract-background_53876-117324.jpg?size=626&ext=jpg&ga=GA1.2.1335288226.1686911525&semt=ais");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        h1 {
+            text-align: center;
+            margin: 30px 0;
+            color: #333;
+            font-size: 36px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        #searchForm {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #searchQuery {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 250px;
+            transition: border-color 0.3s;
+        }
+        #searchQuery:focus {
+            border-color: #007bff;
+        }
+        #movies-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .movie {
+            margin: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        .movie img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .movie-details {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        .movie:hover .movie-details {
+            opacity: 1;
+        }
+        .movie:hover {
+            transform: scale(1.1);
+        }
+        #loading {
+            text-align: center;
+            font-size: 20px;
+            color: #007bff;
+            margin: 20px;
+            display: none;
+        }
+        @keyframes loadingAnimation {
+            0% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.4;
+            }
+        }
+        .loading-dot {
+            display: inline-block;
+            animation: loadingAnimation 1s infinite;
+        }
+        #search{
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100px;
+            transition: border-color 0.3s;
+            cursor: pointer;
+
+        }
+    </style>
+</head>
+<body>
+    <h1>Movie Search</h1>
+    <form action="/movies/" method="GET" id="searchForm">
+        <label for="searchQuery" style="font-size: 18px;">Enter movie title:</label>
+        <input type="text" id="searchQuery" name="searchQuery" required>
+        <input id="search" type="submit" value="Search">
+    </form>
+    <div id="loading" style="display: none;">
+        Loading<span class="loading-dot">.</span><span class="loading-dot">.</span><span class="loading-dot">.</span>
+    </div>
+    <div>
+        <h1>All Movies</h1>
+    </div>
+    
+    <div id="movies-container"></div>
+
+    <script>
+        const loadingElement = document.getElementById('loading');
+        loadingElement.style.display = 'block'; 
+        setTimeout(() => {
+            loadingElement.style.display = 'none'; 
+        }, 2000);
+
+        const moviesData = {{movies|tojson}};
+        const moviesContainer = document.getElementById('movies-container');
+        for (const movie of moviesData) {
+            const movieDiv = document.createElement('div');
+            movieDiv.classList.add('movie');
+
+            const image = document.createElement('img');
+            image.src = movie.image.url;
+            image.alt = movie.title;
+
+            const movieDetails = document.createElement('div');
+            movieDetails.classList.add('movie-details');
+            movieDetails.textContent = `${movie.title} (${movie.year})`;
+
+            movieDiv.appendChild(image);
+            movieDiv.appendChild(movieDetails);
+            moviesContainer.appendChild(movieDiv);
+        }
+    </script>
+</body>
+</html>
