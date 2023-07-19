@@ -32,7 +32,7 @@ def hello_world():
 @app.route("/movies/")
 def get_movies():
     search_query = request.args.get('searchQuery')
-    print(search_query)
+    # print(search_query)
     if not search_query:
         return render_template("index.html")
     
