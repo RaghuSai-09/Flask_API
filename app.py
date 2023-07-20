@@ -47,7 +47,7 @@ def get_movies():
         data = response.json()
         movies = data['results']
         # print(movies)
-        return render_template("movies.html", movies=movies)
+        return render_template("movies.html",query=search_query, movies=movies)
     except Exception as e:
         print("Error:", e)
         return []
